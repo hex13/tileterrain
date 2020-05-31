@@ -1,0 +1,25 @@
+{
+  "name": "tileterrain",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "test": "mocha --watch --require @babel/register"
+  },
+  "author": "= <=>",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "src/createTerrain.js",
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/register": "^7.0.0",
+    "babel-upgrade": "^1.0.1",
+    "mocha": "^7.1.2",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "three": "^0.116.1"
+  }
+}
