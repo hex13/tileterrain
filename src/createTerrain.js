@@ -37,9 +37,8 @@ export function createTerrain({
         rows,
         columns,
         tileSize,
-        onChange,
     }) {
-
+    let onChange;
     const geometry = new THREE.Geometry();
     const GROUND_W = columns;
     const GROUND_H = rows;
@@ -326,15 +325,49 @@ export function createTerrain({
             affected = Object.create(null);
         },
         createLines: () => {
+            let lines1, lines2;
+
             const edges = createGridGeometry();
-            const lines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: 0x000000}));
+            const lines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: 0xffffaa}));
 
             lines.rotation.x = - Math.PI / 2;
             lines.position.y += 0.11;
-            lines.material.opacity = 0.1;
+            lines.material.opacity = 0.06;
             lines.material.transparent = true;
+            lines1 = lines;
 
-            return lines;
+            const group = new THREE.Group();
+
+            group.add(lines1);
+            group.add((_ => {
+                const edges = new THREE.EdgesGeometry(geometry);
+                const lines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: 0x000000}));
+
+                lines.rotation.x = - Math.PI / 2;
+                lines.position.y += 0.13;
+                lines.material.opacity = 0.3;
+                lines.material.transparent = true;
+                lines2 = lines;
+                return lines;
+            })());
+
+            let timeout;
+
+            onChange = () => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    let edges;
+                    lines2.geometry.dispose();
+                    edges = new THREE.EdgesGeometry(geometry);
+                    lines2.geometry = edges;
+
+                    lines1.geometry.dispose();
+                    edges = createGridGeometry();
+                    lines1.geometry = edges;
+                }, 150);
+
+            };
+            return group;
         },
         copyTiles,
         createGrid: createGridGeometry,
