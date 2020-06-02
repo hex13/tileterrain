@@ -6,8 +6,7 @@
     "test": "mocha --watch --require @babel/register"
   },
   "author": "= <=>",
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "MIT",
   "main": "src/createTerrain.js",
   "devDependencies": {
     "@babel/core": "^7.9.6",
