@@ -172,7 +172,11 @@ export function createTerrain({
         );
         
         function adjustTile(x, y, _x, _y) {
-            const { bottomLeftIdx, bottomRightIdx, middleIdx, topLeftIdx, topRightIdx } = computeIndexes(x + _x, y + _y);
+            const finalX = x + _x;
+            const finalY = y + _y;
+            if (finalX < 0 || finalY < 0 || finalX >= columns || finalY >= rows) return;
+
+            const { bottomLeftIdx, bottomRightIdx, middleIdx, topLeftIdx, topRightIdx } = computeIndexes(finalX, finalY);
 
             const cmpFunc = amount >= 0? Math.max : Math.min;
             const extremeZ = cmpFunc(
