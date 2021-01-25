@@ -129,7 +129,7 @@ export function createTerrain({
         };
     }
 
-    function _raise({ x, y }, amount = tileSize, r = 0) {
+    function _raise({ x, y }, amount = tileSize / 2, r = 0) {
         const { vertices } = geometry;
 
         function adjustMiddle(x, y) {
