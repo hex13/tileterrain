@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-
+import { Geometry } from '../vendor/Geometry';
 let affected = Object.create(null);
-
+console.log("GEOM", Geometry);
 function fequal(a, b) {
     return Math.abs(a - b) < 0.001;
 }
@@ -43,7 +43,7 @@ export function createTerrain({
         tileSize,
     }) {
     let onChange;
-    const geometry = new THREE.Geometry();
+    const geometry = new Geometry();
     const GROUND_W = columns;
     const GROUND_H = rows;
 
@@ -238,7 +238,7 @@ export function createTerrain({
     geometry.tiles = tiles;
 
     const createGridGeometry = () => {
-        const edges = new THREE.Geometry();
+        const edges = new Geometry();
         for (let x = 0; x < geometry.tiles.length; x++) {
             for (let y = 0; y < geometry.tiles[x].length; y++) {
                 const geomTile = geometry.tiles[x][y];
@@ -410,7 +410,7 @@ export function createTerrain({
         targetGeom.computeFaceNormals();
         targetGeom.computeVertexNormals();
     }
-
+    console.log("tileTerrain :)");
     return {
         getThreeGeometry: () => geometry,
         raise: (...args) => {

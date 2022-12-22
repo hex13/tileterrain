@@ -1,6 +1,6 @@
 {
   "name": "tileterrain",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "",
   "scripts": {
     "test": "mocha --watch --require @babel/register"
@@ -18,7 +18,7 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0"
   },
-  "dependencies": {
-    "three": "^0.116.1"
+  "optionalDependencies": {
+    "three": "^0.117.1"
   }
 }
