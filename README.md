@@ -20,6 +20,6 @@ const mesh = new THREE.Mesh(terrain.getThreeGeometry(), material);
 ```
 No more docs for now. You can look into source code. Module works but API can change.
 
-Module was extracted from bigger project: https://www.looptile.com/ It's a 3D tile editor.
+Module was extracted from bigger project: https://looptile.netlify.app/ It's a 3D tile editor.
 
 ![Screenshot](screenshot1.jpg)
