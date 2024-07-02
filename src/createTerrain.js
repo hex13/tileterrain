@@ -47,6 +47,9 @@ export function createTerrain({
     const getVertexElevationByIndex = (idx) => {
         return geometry.vertices[idx].z;
     };
+    const addVertex = (x, y, z) => {
+        geometry.vertices.push(new THREE.Vector3(x, y, z));
+    };
 
 
     const GROUND_W = columns;
@@ -63,11 +66,8 @@ export function createTerrain({
             const yFrom = y * tileSize - tileSize * GROUND_H / 2;
 
             const z = tile.z;
-        
-            const idx = geometry.vertices.length;
-            geometry.vertices.push(...[
-                new THREE.Vector3(xFrom, yFrom, z)
-            ]);                    
+
+            addVertex(xFrom, yFrom, z);
         }
 
         if (y < GROUND_H) for (let x = 0; x < GROUND_W; x++) {
@@ -77,10 +77,8 @@ export function createTerrain({
             const yMiddle = yFrom + tileSize / 2;
 
             const z = tile.z;
-        
-            geometry.vertices.push(...[
-                new THREE.Vector3(xMiddle, yMiddle, z),
-            ]);                    
+
+            addVertex(xMiddle, yMiddle, z);
         }
     }
 
@@ -179,7 +177,7 @@ export function createTerrain({
                  Math.sqrt(_x * _x + _y * _y) + 1
             )
         );
-        
+
         function adjustTile(x, y, _x, _y) {
             const finalX = x + _x;
             const finalY = y + _y;
