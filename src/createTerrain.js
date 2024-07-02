@@ -476,6 +476,7 @@ export function createTerrain({
         bufferCopyTiles,
         createGrid: createGridGeometry,
         inBounds,
+        getAffected: () => affected,
         getElevationAt(tile) {
             if (!inBounds(tile.x, tile.y)) {
                 console.error(`(${tile.x}, ${tile.y}) is out of map bounds`)
