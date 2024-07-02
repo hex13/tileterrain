@@ -239,11 +239,6 @@ export function createTerrain({
 
     // geometry.computeFaceNormals();
     geometry.computeVertexNormals();
-    geometry.cloneTile = tile => {
-
-    };
-    geometry.tiles = tiles;
-
 
     function inBounds(x, y) {
         return x >= 0 && y >= 0 && x < columns && y < rows;
