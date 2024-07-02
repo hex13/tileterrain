@@ -248,140 +248,7 @@ export function createTerrain({
     function inBounds(x, y) {
         return x >= 0 && y >= 0 && x < columns && y < rows;
     }
-    function bufferCopyTiles(targetGeom, tile, tile2, getMaterial = () => 0) {
-        const vertices = [];
-        const indices = [];
-        const uvs = [];
-        targetGeom.faces = [];
-        if (!inBounds(tile.x, tile.y) || !inBounds(tile2.x, tile2.y)) {
-            console.error(`Tiles out ouf bounds: (${tile.x}, ${tile.y}), ({${tile2.x}, ${tile2.y})`);
-            return;
-        }
-        let idx = 0;
-        const mapVertex = idx => {
-            const vertex = geometry.vertices[idx];
-            if (vertex.z < 0) {
-                return [vertex.x, vertex.y, 0];
-            }
-            return [vertex.x, vertex.y, vertex.z];
-        };
-        for (let y = tile.y; y <= tile2.y; y++) {
-            for (let x = tile.x; x <= tile2.x; x++) {
 
-                const geomTile = geometry.tiles[x][y];
-                if (!geomTile) {
-                    continue;
-                }
-
-                geomTile.faces.forEach(face => {
-                    vertices.push(
-                        ...mapVertex(face.a), ...mapVertex(face.b), ...mapVertex(face.c),
-                        // geometry.vertices[face.a],
-                        // geometry.vertices[face.b],
-                        // geometry.vertices[face.c],
-                    );
-                });
-
-                const mat = getMaterial(x,y);
-                indices.push(
-                    idx, idx + 1, idx + 2,
-                    idx + 3, idx + 4, idx + 5,
-                    idx + 6, idx + 7, idx + 8,
-                    idx + 9, idx + 10, idx + 11
-                );
-                idx += 4 * 3; // 4 faces, each face has 3 vertices
-
-                createFaceVertexUvs({
-                    bottomLeftUv: {x: 0, y: 0},
-                    bottomRightUv: {x: 1, y: 0},
-                    topLeftUv: {x: 0, y: 1},
-                    topRightUv: {x: 1, y: 1},
-                    middleUv: {x: 0.5, y: 0.5},
-                }).forEach(arr => {
-                    arr.forEach(vertexData => {
-                        uvs.push(vertexData.x, vertexData.y);
-                    })
-                    // uvs.push(arr);
-                });
-
-            }
-        }
-        targetGeom.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3))
-        targetGeom.setIndex(indices);
-
-        targetGeom.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
-
-        targetGeom.facesNeedUpdate;
-        targetGeom.verticesNeedUpdate;
-        targetGeom.normalsNeedUpdate = true;
-        targetGeom.uvsNeedUpdate = true;
-
-        targetGeom.elementsNeedUpdate = true;
-        // targetGeom.computeFaceNormals();
-        targetGeom.computeVertexNormals();
-
-    }
-
-    function copyTiles(targetGeom, tile, tile2, getMaterial = () => 0) {
-        targetGeom.vertices = [];
-        targetGeom.faces = [];
-        if (!inBounds(tile.x, tile.y) || !inBounds(tile2.x, tile2.y)) {
-            console.error(`Tiles out ouf bounds: (${tile.x}, ${tile.y}), ({${tile2.x}, ${tile2.y})`);
-            return;
-        }
-        let idx = 0;
-        const mapVertex = idx => {
-            const vertex = geometry.vertices[idx];
-            if (vertex.z < 0) {
-                return vertex.clone().set(vertex.x, vertex.y, 0);
-            }
-            return vertex;
-        };
-        for (let y = tile.y; y <= tile2.y; y++) {
-            for (let x = tile.x; x <= tile2.x; x++) {
-
-                const geomTile = geometry.tiles[x][y];
-                if (!geomTile) {
-                    continue;
-                }
-
-                geomTile.faces.forEach(face => {
-                    targetGeom.vertices.push(...[
-                        mapVertex(face.a), mapVertex(face.b), mapVertex(face.c),
-                        // geometry.vertices[face.a],
-                        // geometry.vertices[face.b],
-                        // geometry.vertices[face.c],
-                    ]);
-                });
-
-                const mat = getMaterial(x,y);
-                targetGeom.faces.push(...[
-                    new THREE.Face3(idx, idx + 1, idx + 2, undefined, undefined, mat),
-                    new THREE.Face3(idx + 3, idx + 4, idx + 5, undefined, undefined, mat),
-                    new THREE.Face3(idx + 6, idx + 7, idx + 8, undefined, undefined, mat),
-                    new THREE.Face3(idx + 9, idx + 10, idx + 11, undefined, undefined, mat),
-                ]);
-                idx += 4 * 3; // 4 faces, each face has 3 vertices
-
-                targetGeom.faceVertexUvs[0].push(...createFaceVertexUvs({
-                    bottomLeftUv: {x: 0, y: 0},
-                    bottomRightUv: {x: 1, y: 0},
-                    topLeftUv: {x: 0, y: 1},
-                    topRightUv: {x: 1, y: 1},
-                    middleUv: {x: 0.5, y: 0.5},
-
-                }))
-            }
-        }
-
-        targetGeom.facesNeedUpdate;
-        targetGeom.verticesNeedUpdate;
-        targetGeom.normalsNeedUpdate = true;
-
-        targetGeom.elementsNeedUpdate = true;
-        // targetGeom.computeFaceNormals();
-        targetGeom.computeVertexNormals();
-    }
     console.log("tileTerrain :)");
     return {
         getThreeGeometry: () => geometry,
@@ -393,13 +260,10 @@ export function createTerrain({
             geometry.computeFaceNormals();
             // geometry.computeVertexNormals();
             geometry.computeFlatVertexNormals();
-
         },
         clearAffectedList: () => {
             affected = Object.create(null);
         },
-        copyTiles,
-        bufferCopyTiles,
         inBounds,
         getAffected: () => affected,
         getElevationAt(tile) {
