@@ -238,7 +238,7 @@ export function createTerrain({
             const topRight = getVertexElevationByIndex(tileData.vertices.topRightIdx);
             const bottomLeft = getVertexElevationByIndex(tileData.vertices.bottomLeftIdx);
             const bottomRight = getVertexElevationByIndex(tileData.vertices.bottomRightIdx);
-            const equal = topLeft 
+            const equal = topLeft
 
             const minElevation = Math.min(middle, topLeft, topRight, bottomLeft, bottomRight);
             const maxElevation = Math.max(middle, topLeft, topRight, bottomLeft, bottomRight);
@@ -261,7 +261,7 @@ export function createTerrain({
             } catch (e) {
                 console.error(tile)
             }
-            
+
         }
     }
 }
