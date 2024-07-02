@@ -41,8 +41,19 @@ export function createTerrain({
         rows,
         columns,
         tileSize,
+        onChange,
     }) {
-    let onChange;
+    const _onChange = () => {
+        geometry.uvsNeedUpdate = true;
+        geometry.normalsNeedUpdate = true;
+        geometry.verticesNeedUpdate = true;
+        geometry.computeFaceNormals();
+        // geometry.computeVertexNormals();
+        geometry.computeFlatVertexNormals();
+        onChange && onChange({
+            geometry: geometry.toBufferGeometry(),
+        });
+    };
     const geometry = new Geometry();
     const getVertexElevationByIndex = (idx) => {
         return geometry.vertices[idx].z;
@@ -115,13 +126,14 @@ export function createTerrain({
                 }
             }
 
-            geometry.faceVertexUvs[0].push(...createFaceVertexUvs({
-                bottomLeftUv: {x: x / GROUND_W, y: y / GROUND_H},
-                bottomRightUv: {x: (x + 1) / GROUND_W, y: y / GROUND_H},
-                topLeftUv: {x: x / GROUND_W, y: (y + 1) / GROUND_H},
-                topRightUv: {x: (x + 1) / GROUND_W, y: (y + 1) / GROUND_H},
-                middleUv: {x: (x + 0.5) / GROUND_W, y: (y + 0.5) / GROUND_H},
-            }))
+            // TODO restore or remove 
+            // geometry.faceVertexUvs[0].push(...createFaceVertexUvs({
+            //     bottomLeftUv: {x: x / GROUND_W, y: y / GROUND_H},
+            //     bottomRightUv: {x: (x + 1) / GROUND_W, y: y / GROUND_H},
+            //     topLeftUv: {x: x / GROUND_W, y: (y + 1) / GROUND_H},
+            //     topRightUv: {x: (x + 1) / GROUND_W, y: (y + 1) / GROUND_H},
+            //     middleUv: {x: (x + 0.5) / GROUND_W, y: (y + 0.5) / GROUND_H},
+            // }))
         }
     }
 
@@ -228,33 +240,19 @@ export function createTerrain({
                 adjustMiddle(x + _x, y + _y);
             }
         }
-        onChange && onChange();
+        _onChange();
     }
-
-    geometry.uvsNeedUpdate = true;
-    geometry.normalsNeedUpdate = true;
-
-    geometry.uvsNeedUpdate = true;
-    geometry.normalsNeedUpdate = true;
-
-    // geometry.computeFaceNormals();
-    geometry.computeVertexNormals();
 
     function inBounds(x, y) {
         return x >= 0 && y >= 0 && x < columns && y < rows;
     }
 
-    console.log("tileTerrain :)");
+    setTimeout(_onChange, 0);
+
     return {
         getThreeGeometry: () => geometry,
         raise: (...args) => {
             _raise(...args);
-            geometry.uvsNeedUpdate = true;
-            geometry.normalsNeedUpdate = true;
-            geometry.verticesNeedUpdate = true;
-            geometry.computeFaceNormals();
-            // geometry.computeVertexNormals();
-            geometry.computeFlatVertexNormals();
         },
         clearAffectedList: () => {
             affected = Object.create(null);
