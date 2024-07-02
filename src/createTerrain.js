@@ -244,41 +244,6 @@ export function createTerrain({
     };
     geometry.tiles = tiles;
 
-    const createGridGeometry = () => {
-        const edges = new Geometry();
-        for (let x = 0; x < geometry.tiles.length; x++) {
-            for (let y = 0; y < geometry.tiles[x].length; y++) {
-                const geomTile = geometry.tiles[x][y];
-
-                const bottomLeft = geometry.vertices[geomTile.vertices.bottomLeftIdx];
-                const bottomRight = geometry.vertices[geomTile.vertices.bottomRightIdx];
-                const topLeft = geometry.vertices[geomTile.vertices.topLeftIdx];
-                const topRight = geometry.vertices[geomTile.vertices.topRightIdx];
-                const middle = geometry.vertices[geomTile.vertices.middleIdx];
-
-                edges.vertices.push(bottomLeft);
-                edges.vertices.push(bottomRight);
-                edges.vertices.push(bottomLeft);
-                edges.vertices.push(topLeft);
-
-                // diagonal edges
-                const threshold = 0.1;
-                if ( Math.abs((topRight.z + bottomLeft.z) / 2 - middle.z) > threshold) {
-                    edges.vertices.push(topLeft);
-                    edges.vertices.push(middle);
-                    edges.vertices.push(middle);
-                    edges.vertices.push(bottomRight);
-                }
-                if (Math.abs((topLeft.z + bottomRight.z) / 2 - middle.z) > threshold) {
-                    edges.vertices.push(bottomLeft);
-                    edges.vertices.push(middle);
-                    edges.vertices.push(middle);
-                    edges.vertices.push(topRight);
-                }
-            }
-        }
-        return edges;
-    }
 
     function inBounds(x, y) {
         return x >= 0 && y >= 0 && x < columns && y < rows;
@@ -433,55 +398,8 @@ export function createTerrain({
         clearAffectedList: () => {
             affected = Object.create(null);
         },
-        createLines: () => {
-            let lines1, lines2;
-
-            const edges = createGridGeometry();
-            const lines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: 0xffffaa}));
-
-            lines.rotation.x = - Math.PI / 2;
-            lines.position.y += 0.11;
-            lines.material.opacity = 0.06;
-            lines.material.transparent = true;
-            lines1 = lines;
-
-            const group = new THREE.Group();
-
-            group.add(lines1);
-            group.add((_ => {
-                const edges = new THREE.EdgesGeometry(geometry);
-                const lines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: 0x000000}));
-
-                lines.rotation.x = - Math.PI / 2;
-                lines.position.y += 0.3;
-                lines.material.opacity = 0.14;
-                lines.material.transparent = true;
-                lines2 = lines;
-                return lines;
-            })());
-
-            let timeout;
-
-            onChange = () => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    let edges;
-                    lines1.geometry.dispose();
-                    edges = createGridGeometry();
-                    lines1.geometry = edges;
-
-                    lines2.geometry.dispose();
-                    edges = new THREE.EdgesGeometry(geometry);
-                    lines2.geometry = edges;
-
-                }, 150);
-
-            };
-            return group;
-        },
         copyTiles,
         bufferCopyTiles,
-        createGrid: createGridGeometry,
         inBounds,
         getAffected: () => affected,
         getElevationAt(tile) {
