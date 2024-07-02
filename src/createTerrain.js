@@ -58,6 +58,9 @@ export function createTerrain({
     const getVertexElevationByIndex = (idx) => {
         return geometry.vertices[idx].z;
     };
+    const setVertexElevationByIndex = (idx, z) => {
+       geometry.vertices[idx].z = z;
+    }
     const addVertex = (x, y, z) => {
         geometry.vertices.push(new THREE.Vector3(x, y, z));
     };
@@ -172,7 +175,7 @@ export function createTerrain({
                     break;
                 }
             }
-            vertices[tileIndexes.middleIdx].z = nz;
+            setVertexElevationByIndex(tileIndexes.middleIdx, nz);
         }
 
         function adjustVertex(idx, z) {
@@ -182,9 +185,9 @@ export function createTerrain({
 
             const direction = Math.sign(z - affected[idx]);
             if (Math.abs(z - affected[idx]) <= Math.abs(amount)) {
-                vertices[idx].z = z;
+                setVertexElevationByIndex(idx, z);
             } else {
-                vertices[idx].z = affected[idx] + Math.abs(amount) * direction;
+                setVertexElevationByIndex(idx, affected[idx] + Math.abs(amount) * direction);
             }
         }
 
