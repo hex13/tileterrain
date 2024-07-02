@@ -6,36 +6,6 @@ function fequal(a, b) {
     return Math.abs(a - b) < 0.001;
 }
 
-function createFaceVertexUvs({ bottomLeftUv, bottomRightUv, topLeftUv, topRightUv, middleUv }) {
-    const faceVertexUvs = [];
-
-    faceVertexUvs.push([
-        new THREE.Vector2(bottomLeftUv.x, bottomLeftUv.y),
-        new THREE.Vector2(bottomRightUv.x, bottomRightUv.y),
-        new THREE.Vector2(middleUv.x, middleUv.y),
-    ]);
-
-    faceVertexUvs.push([
-        new THREE.Vector2(bottomLeftUv.x, bottomLeftUv.y),
-        new THREE.Vector2(middleUv.x, middleUv.y),
-        new THREE.Vector2(topLeftUv.x, topLeftUv.y),
-    ]);
-
-    faceVertexUvs.push([
-        new THREE.Vector2(middleUv.x, middleUv.y),
-        new THREE.Vector2(topRightUv.x, topRightUv.y),
-        new THREE.Vector2(topLeftUv.x, topLeftUv.y),
-    ]);
-
-    faceVertexUvs.push([
-        new THREE.Vector2(middleUv.x, middleUv.y),
-        new THREE.Vector2(bottomRightUv.x, bottomRightUv.y),
-        new THREE.Vector2(topRightUv.x, topRightUv.y),
-    ]);
-    return faceVertexUvs
-    ;
-}
-
 export function createTerrain({
         tile,
         rows,
