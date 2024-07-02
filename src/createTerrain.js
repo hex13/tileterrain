@@ -39,8 +39,6 @@ export function createTerrain({
     };
     const addFace = (a, b, c) => {
         bufferFaces.push(a, b, c);
-        const face = new THREE.Face3(a, b, c, new THREE.Vector3(0, 1, 0), 0xffffff, 0);
-        return face;
     };
 
     const GROUND_W = columns;
@@ -88,11 +86,11 @@ export function createTerrain({
                 [middleIdx, topRightIdx, topLeftIdx],
                 [middleIdx, bottomRightIdx, topRightIdx],
             ];
+            _faces.forEach(([a, b, c]) => {
+                return addFace(a, b, c);
+            });
 
             tiles[x][y] = {
-                faces: _faces.map(([a, b, c]) => {
-                    return addFace(a, b, c);
-                }),
                 vertices: {
                     bottomLeftIdx,
                     bottomRightIdx,
