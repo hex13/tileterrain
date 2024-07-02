@@ -50,7 +50,11 @@ export function createTerrain({
     const addVertex = (x, y, z) => {
         geometry.vertices.push(new THREE.Vector3(x, y, z));
     };
-
+    const addFace = (a, b, c) => {
+        const face = new THREE.Face3(a, b, c, new THREE.Vector3(0, 1, 0), 0xffffff, 0);
+        geometry.faces.push(face);
+        return face;
+    };
 
     const GROUND_W = columns;
     const GROUND_H = rows;
@@ -91,17 +95,17 @@ export function createTerrain({
             const middleIdx =  bottomLeftIdx + GROUND_W + 1;
             const topLeftIdx =  middleIdx + GROUND_W;
             const topRightIdx =  topLeftIdx + 1;
-            const faces = [
-                new THREE.Face3(bottomLeftIdx, bottomRightIdx, middleIdx, new THREE.Vector3(0, 1, 0), 0xffffff, 0),
-                new THREE.Face3(bottomLeftIdx, middleIdx, topLeftIdx, new THREE.Vector3(0, 1, 0), 0xffffff, 0),
-                new THREE.Face3(middleIdx, topRightIdx, topLeftIdx, new THREE.Vector3(0, 1, 0), 0xffffff, 0),
-                new THREE.Face3(middleIdx, bottomRightIdx, topRightIdx, new THREE.Vector3(0, 1, 0), 0xffffff, 0),
+            const _faces = [
+                [bottomLeftIdx, bottomRightIdx, middleIdx],
+                [bottomLeftIdx, middleIdx, topLeftIdx],
+                [middleIdx, topRightIdx, topLeftIdx],
+                [middleIdx, bottomRightIdx, topRightIdx],
             ];
 
-            geometry.faces.push(...faces);
-
             tiles[x][y] = {
-                faces,
+                faces: _faces.map(([a, b, c]) => {
+                    return addFace(a, b, c);
+                }),
                 vertices: {
                     bottomLeftIdx,
                     bottomRightIdx,
