@@ -161,10 +161,11 @@ export function createTerrain({
         function adjustMiddle(x, y) {
             if (x < 0 || x >= GROUND_W || y< 0 || y >= GROUND_H) return;
             const tileIndexes = computeIndexes(x, y);
-            const z1 = vertices[tileIndexes.topLeftIdx].z;
-            const z2 = vertices[tileIndexes.topRightIdx].z;
-            const z3 = vertices[tileIndexes.bottomLeftIdx].z;
-            const z4 = vertices[tileIndexes.bottomRightIdx].z;
+
+            const z1 = getVertexElevationByIndex(tileIndexes.topLeftIdx);
+            const z2 = getVertexElevationByIndex(tileIndexes.topRightIdx);
+            const z3 = getVertexElevationByIndex(tileIndexes.bottomLeftIdx);
+            const z4 = getVertexElevationByIndex(tileIndexes.bottomRightIdx);
             const cmpFunc = amount >= 0? Math.min : Math.max;
             let nz = (z1 + z2 + z3 + z4) / 4;
             const threshold = Math.abs(amount) / 3;
@@ -180,7 +181,7 @@ export function createTerrain({
 
         function adjustVertex(idx, z) {
             if (affected[idx] === undefined) {
-                affected[idx] = vertices[idx].z;
+                affected[idx] = getVertexElevationByIndex(idx);
             }
 
             const direction = Math.sign(z - affected[idx]);
@@ -206,19 +207,19 @@ export function createTerrain({
 
             const cmpFunc = amount >= 0? Math.max : Math.min;
             const extremeZ = cmpFunc(
-                vertices[middleIdx].z,
-                vertices[bottomLeftIdx].z,
-                vertices[bottomRightIdx].z,
-                vertices[topLeftIdx].z,
-                vertices[topRightIdx].z,
+                getVertexElevationByIndex(middleIdx),
+                getVertexElevationByIndex(bottomLeftIdx),
+                getVertexElevationByIndex(bottomRightIdx),
+                getVertexElevationByIndex(topLeftIdx),
+                getVertexElevationByIndex(topRightIdx),
             );
             const flat = (
-                vertices[middleIdx].z == extremeZ &&
-                vertices[bottomLeftIdx].z == extremeZ &&
-                vertices[bottomRightIdx].z == extremeZ &&
-                vertices[topLeftIdx].z == extremeZ &&
-                vertices[topRightIdx].z == extremeZ
-            )
+                getVertexElevationByIndex(middleIdx) == extremeZ &&
+                getVertexElevationByIndex(bottomLeftIdx) == extremeZ &&
+                getVertexElevationByIndex(bottomRightIdx) == extremeZ &&
+                getVertexElevationByIndex(topLeftIdx) == extremeZ &&
+                getVertexElevationByIndex(topRightIdx) == extremeZ
+            );
             const targetZ = flat? extremeZ + computeZ(_x, _y) : extremeZ;
 
             if ( _x <= 0 && _y <= 0)
