@@ -42,31 +42,34 @@ export function createTerrain({
         columns,
         tileSize,
         onChange,
+        T,
     }) {
     const _onChange = () => {
-        geometry.uvsNeedUpdate = true;
-        geometry.normalsNeedUpdate = true;
-        geometry.verticesNeedUpdate = true;
-        geometry.computeFaceNormals();
-        // geometry.computeVertexNormals();
-        geometry.computeFlatVertexNormals();
+        const bufferGeometry = new T.BufferGeometry();
+        bufferGeometry.setAttribute('position', new T.BufferAttribute(new Float32Array(bufferVertices), 3));
+        bufferGeometry.getAttribute('position').needsUpdate = true;
+        bufferGeometry.setIndex(bufferFaces);
+        bufferGeometry.computeVertexNormals();
+        // bufferGeometry.needsUpdate = true;
+
         onChange && onChange({
-            geometry: geometry.toBufferGeometry(),
+            geometry: bufferGeometry,
         });
     };
-    const geometry = new Geometry();
+    const bufferVertices = [];
+    const bufferFaces = [];
     const getVertexElevationByIndex = (idx) => {
-        return geometry.vertices[idx].z;
+        return bufferVertices[idx * 3 + 2];
     };
     const setVertexElevationByIndex = (idx, z) => {
-       geometry.vertices[idx].z = z;
+       bufferVertices[idx * 3 + 2] = z;
     }
     const addVertex = (x, y, z) => {
-        geometry.vertices.push(new THREE.Vector3(x, y, z));
+        bufferVertices.push(x, y, z);
     };
     const addFace = (a, b, c) => {
+        bufferFaces.push(a, b, c);
         const face = new THREE.Face3(a, b, c, new THREE.Vector3(0, 1, 0), 0xffffff, 0);
-        geometry.faces.push(face);
         return face;
     };
 
@@ -128,15 +131,6 @@ export function createTerrain({
                     topRightIdx,
                 }
             }
-
-            // TODO restore or remove 
-            // geometry.faceVertexUvs[0].push(...createFaceVertexUvs({
-            //     bottomLeftUv: {x: x / GROUND_W, y: y / GROUND_H},
-            //     bottomRightUv: {x: (x + 1) / GROUND_W, y: y / GROUND_H},
-            //     topLeftUv: {x: x / GROUND_W, y: (y + 1) / GROUND_H},
-            //     topRightUv: {x: (x + 1) / GROUND_W, y: (y + 1) / GROUND_H},
-            //     middleUv: {x: (x + 0.5) / GROUND_W, y: (y + 0.5) / GROUND_H},
-            // }))
         }
     }
 
@@ -156,7 +150,6 @@ export function createTerrain({
     }
 
     function _raise({ x, y }, amount = tileSize / 2, r = 0) {
-        const { vertices } = geometry;
 
         function adjustMiddle(x, y) {
             if (x < 0 || x >= GROUND_W || y< 0 || y >= GROUND_H) return;
@@ -254,7 +247,6 @@ export function createTerrain({
     setTimeout(_onChange, 0);
 
     return {
-        getThreeGeometry: () => geometry,
         raise: (...args) => {
             _raise(...args);
         },
