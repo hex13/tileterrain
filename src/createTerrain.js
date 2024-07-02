@@ -1,7 +1,6 @@
 import * as THREE from 'three';
-import { Geometry } from '../vendor/Geometry';
 let affected = Object.create(null);
-console.log("GEOM", Geometry);
+
 function fequal(a, b) {
     return Math.abs(a - b) < 0.001;
 }
