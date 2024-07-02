@@ -34,7 +34,9 @@ describe('TileTerrain', () => {
                         tileSize,
                         columns,
                         rows,
-                        T: THREE,
+                        use: {
+                            THREE,
+                        },
                         onChange({ geometry }) {
                             vertices = createLegacyThreeVertices(geometry);
                             if (!isDone) {
@@ -83,7 +85,9 @@ describe('TileTerrain', () => {
                 tileSize,
                 columns,
                 rows,
-                T: THREE,
+                use: {
+                    THREE,
+                },
                 onChange(d) {
                     geometry = d.geometry;
                     if (!isDone) {

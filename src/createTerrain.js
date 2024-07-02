@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 let affected = Object.create(null);
 
 function fequal(a, b) {
@@ -11,16 +10,19 @@ export function createTerrain({
         columns,
         tileSize,
         onChange,
-        T,
+        use = {},
     }) {
     const _onChange = () => {
-        const bufferGeometry = new T.BufferGeometry();
-        bufferGeometry.setAttribute('position', new T.BufferAttribute(new Float32Array(bufferVertices), 3));
-        bufferGeometry.getAttribute('position').needsUpdate = true;
-        bufferGeometry.setIndex(bufferFaces);
-        bufferGeometry.computeVertexNormals();
-        // bufferGeometry.needsUpdate = true;
-
+        let bufferGeometry;
+        if (use.THREE) {
+            const { THREE } = use;
+            bufferGeometry = new THREE.BufferGeometry();
+            bufferGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(bufferVertices), 3));
+            bufferGeometry.getAttribute('position').needsUpdate = true;
+            bufferGeometry.setIndex(bufferFaces);
+            bufferGeometry.computeVertexNormals();
+            // bufferGeometry.needsUpdate = true;
+        }
         onChange && onChange({
             geometry: bufferGeometry,
         });
