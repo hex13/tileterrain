@@ -44,6 +44,11 @@ export function createTerrain({
     }) {
     let onChange;
     const geometry = new Geometry();
+    const getVertexElevationByIndex = (idx) => {
+        return geometry.vertices[idx].z;
+    };
+
+
     const GROUND_W = columns;
     const GROUND_H = rows;
 
@@ -487,11 +492,12 @@ export function createTerrain({
 
             try {
             const tileData = tiles[tile.x][tile.y];
-            const middle = geometry.vertices[tileData.vertices.middleIdx].z;
-            const topLeft = geometry.vertices[tileData.vertices.topLeftIdx].z;
-            const topRight = geometry.vertices[tileData.vertices.topRightIdx].z;
-            const bottomLeft = geometry.vertices[tileData.vertices.bottomLeftIdx].z;
-            const bottomRight = geometry.vertices[tileData.vertices.bottomRightIdx].z;
+
+            const middle = getVertexElevationByIndex(tileData.vertices.middleIdx);
+            const topLeft = getVertexElevationByIndex(tileData.vertices.topLeftIdx);
+            const topRight = getVertexElevationByIndex(tileData.vertices.topRightIdx);
+            const bottomLeft = getVertexElevationByIndex(tileData.vertices.bottomLeftIdx);
+            const bottomRight = getVertexElevationByIndex(tileData.vertices.bottomRightIdx);
             const equal = topLeft 
 
             const minElevation = Math.min(middle, topLeft, topRight, bottomLeft, bottomRight);
