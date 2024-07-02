@@ -230,7 +230,7 @@ export function createTerrain({
     geometry.uvsNeedUpdate = true;
     geometry.normalsNeedUpdate = true;
 
-    geometry.computeFaceNormals();
+    // geometry.computeFaceNormals();
     geometry.computeVertexNormals();
     geometry.cloneTile = tile => {
 
@@ -345,7 +345,7 @@ export function createTerrain({
         targetGeom.uvsNeedUpdate = true;
 
         targetGeom.elementsNeedUpdate = true;
-        targetGeom.computeFaceNormals();
+        // targetGeom.computeFaceNormals();
         targetGeom.computeVertexNormals();
 
     }
@@ -407,7 +407,7 @@ export function createTerrain({
         targetGeom.normalsNeedUpdate = true;
 
         targetGeom.elementsNeedUpdate = true;
-        targetGeom.computeFaceNormals();
+        // targetGeom.computeFaceNormals();
         targetGeom.computeVertexNormals();
     }
     console.log("tileTerrain :)");
