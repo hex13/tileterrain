@@ -34,6 +34,7 @@ describe('TileTerrain', () => {
                         tileSize,
                         columns,
                         rows,
+                        shouldUseIndices: true,
                         use: {
                             THREE,
                         },
@@ -85,6 +86,7 @@ describe('TileTerrain', () => {
                 tileSize,
                 columns,
                 rows,
+                shouldUseIndices: true,
                 use: {
                     THREE,
                 },

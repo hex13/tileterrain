@@ -11,15 +11,32 @@ export function createTerrain({
         tileSize,
         onChange,
         use = {},
+        shouldUseIndices = false,
     }) {
     const _onChange = () => {
         let bufferGeometry;
         if (use.THREE) {
             const { THREE } = use;
             bufferGeometry = new THREE.BufferGeometry();
-            bufferGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(bufferVertices), 3));
+
+            let position;
+            if (shouldUseIndices) {
+                bufferGeometry.setIndex(bufferFaces);
+                position = bufferVertices;
+            } else {
+                position = [];
+                for (let i = 0; i < bufferFaces.length; i += 3) {
+                    for (let j = 0; j < 3; j++) {
+                        const idx = bufferFaces[i + j];
+                        position.push(bufferVertices[idx * 3]);
+                        position.push(bufferVertices[idx * 3 + 1]);
+                        position.push(bufferVertices[idx * 3 + 2]);
+                    }
+                }
+            }
+            bufferGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(position), 3));
             bufferGeometry.getAttribute('position').needsUpdate = true;
-            bufferGeometry.setIndex(bufferFaces);
+
             bufferGeometry.computeVertexNormals();
             // bufferGeometry.needsUpdate = true;
         }
