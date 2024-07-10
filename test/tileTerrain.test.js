@@ -53,8 +53,8 @@ describe('TileTerrain', () => {
                         + (columns + 1) * (rows + 1) // grid
                     );
 
-                    const bottomLeftX = - tileSize * columns / 2;
-                    const bottomLeftY = - tileSize * rows / 2;
+                    const bottomLeftX = 0;
+                    const bottomLeftY = 0;
 
                     // bottom left tile: bottom edge
                     assert.deepStrictEqual(vertices[0], new Vector3(bottomLeftX, bottomLeftY, z0));
@@ -109,19 +109,19 @@ describe('TileTerrain', () => {
             vertices = createLegacyThreeVertices(geometry);
 
             // bottom-left vertex of affected tile
-            assert.deepStrictEqual(vertices[idx], new Vector3(-tileSize / 2, -tileSize / 2, z0 + amount));
+            assert.deepStrictEqual(vertices[idx], new Vector3(x * tileSize, y * tileSize, z0 + amount));
 
             // bottom-right vertex of affected tile
-            assert.deepStrictEqual(vertices[idx + 1], new Vector3(tileSize / 2, -tileSize / 2, z0 + amount));
+            assert.deepStrictEqual(vertices[idx + 1], new Vector3((x + 1) * tileSize, y * tileSize, z0 + amount));
 
             // top-left vertex of affected tile
-            assert.deepStrictEqual(vertices[idx + columns * 2 + 1], new Vector3(-tileSize / 2, tileSize / 2, z0 + amount));
+            assert.deepStrictEqual(vertices[idx + columns * 2 + 1], new Vector3(x * tileSize, (y + 1) * tileSize, z0 + amount));
 
             // top-right vertex of affected tile
-            assert.deepStrictEqual(vertices[idx + columns * 2 + 2], new Vector3(tileSize / 2, tileSize / 2, z0 + amount));
+            assert.deepStrictEqual(vertices[idx + columns * 2 + 2], new Vector3((x + 1) * tileSize, (y + 1) * tileSize, z0 + amount));
 
             // middle vertex of affected tile
-            assert.deepStrictEqual(vertices[idx + columns + 1], new Vector3(0, 0, z0 + amount));
+            assert.deepStrictEqual(vertices[idx + columns + 1], new Vector3((x + 0.5) * tileSize, (y + 0.5) * tileSize, z0 + amount));
 
         })
     })

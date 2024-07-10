@@ -52,8 +52,8 @@ export function createTerrain({
 
     for (let y = 0; y <= GROUND_H; y++) {
         for (let x = 0; x <= GROUND_W; x++) {
-            const xFrom = x * tileSize - tileSize * GROUND_W / 2;
-            const yFrom = y * tileSize - tileSize * GROUND_H / 2;
+            const xFrom = x * tileSize;
+            const yFrom = y * tileSize;
 
             const z = tile.z;
 
@@ -61,8 +61,8 @@ export function createTerrain({
         }
 
         if (y < GROUND_H) for (let x = 0; x < GROUND_W; x++) {
-            const xFrom = x * tileSize - tileSize * GROUND_W / 2;
-            const yFrom = y * tileSize - tileSize * GROUND_H / 2;
+            const xFrom = x * tileSize;
+            const yFrom = y * tileSize;
             const xMiddle = xFrom + tileSize / 2;
             const yMiddle = yFrom + tileSize / 2;
 
@@ -71,7 +71,6 @@ export function createTerrain({
             addVertex(xMiddle, yMiddle, z);
         }
     }
-
 
 
     for (let y = 0; y < GROUND_H; y++) {
