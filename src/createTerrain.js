@@ -13,6 +13,10 @@ export function createTerrain({
         use = {},
         shouldUseIndices = false,
     }) {
+    if (rows == undefined || columns == undefined) {
+        throw new Error('createTerrain(): you need pass rows and columns numbers.')
+    }
+    const baseZ = 0;
     const _onChange = () => {
         let bufferGeometry;
         if (use.THREE) {
