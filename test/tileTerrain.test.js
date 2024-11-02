@@ -4,7 +4,7 @@ import * as assert from 'assert';
 
 const Vector3 = THREE.Vector3;
 
-const z0 = 123;
+const z0 = 0;
 const tileSize = 7;
 
 
@@ -30,7 +30,6 @@ describe('TileTerrain', () => {
                     let isDone = false;
                     vertices = null;
                     terrain = createTerrain({
-                        tile: {x: 13, y: 2, z: z0},
                         tileSize,
                         columns,
                         rows,
@@ -82,7 +81,6 @@ describe('TileTerrain', () => {
         before(done => {
             let isDone = false;
             terrain = createTerrain({
-                tile: {x: 13, y: 2, z: z0},
                 tileSize,
                 columns,
                 rows,

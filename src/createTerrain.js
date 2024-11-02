@@ -5,7 +5,6 @@ function fequal(a, b) {
 }
 
 export function createTerrain({
-        tile,
         rows,
         columns,
         tileSize,
@@ -76,7 +75,7 @@ export function createTerrain({
             const xFrom = x * tileSize;
             const yFrom = y * tileSize;
 
-            const z = tile.z;
+            const z = baseZ;
 
             addVertex(xFrom, yFrom, z);
         }
@@ -87,7 +86,7 @@ export function createTerrain({
             const xMiddle = xFrom + tileSize / 2;
             const yMiddle = yFrom + tileSize / 2;
 
-            const z = tile.z;
+            const z = baseZ;
 
             addVertex(xMiddle, yMiddle, z);
         }
