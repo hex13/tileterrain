@@ -18,11 +18,12 @@ export function createTerrain({
     const baseZ = 0;
     const _onChange = () => {
         let bufferGeometry;
+        let position;
         if (use.THREE) {
+            // TODO remove duplication in if-else branches
             const { THREE } = use;
             bufferGeometry = new THREE.BufferGeometry();
 
-            let position;
             if (shouldUseIndices) {
                 bufferGeometry.setIndex(bufferFaces);
                 position = bufferVertices;
@@ -42,11 +43,28 @@ export function createTerrain({
 
             bufferGeometry.computeVertexNormals();
             // bufferGeometry.needsUpdate = true;
+        } else {
+            // TODO remove duplication in if-else branches
+            if (shouldUseIndices) {
+                position = bufferVertices;
+            } else {
+                position = [];
+                for (let i = 0; i < bufferFaces.length; i += 3) {
+                    for (let j = 0; j < 3; j++) {
+                        const idx = bufferFaces[i + j];
+                        position.push(bufferVertices[idx * 3]);
+                        position.push(bufferVertices[idx * 3 + 1]);
+                        position.push(bufferVertices[idx * 3 + 2]);
+                    }
+                }
+                position = new Float32Array(position);
+            }
         }
         onChange && onChange({
             geometry: bufferGeometry,
+            position,
         });
-    };
+    }
     const bufferVertices = [];
     const bufferFaces = [];
     const getVertexElevationByIndex = (idx) => {
@@ -243,6 +261,9 @@ export function createTerrain({
         },
         inBounds,
         getAffected: () => affected,
+        getData() {
+            return { bufferVertices };
+        },
         getElevationAt(tile) {
             if (!inBounds(tile.x, tile.y)) {
                 console.error(`(${tile.x}, ${tile.y}) is out of map bounds`)
